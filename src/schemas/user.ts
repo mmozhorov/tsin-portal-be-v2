@@ -1,5 +1,5 @@
 import { Document, Schema, Model, model, Error } from 'mongoose'
-import bcrypt from 'bcryptjs'
+const bcrypt = require('bcryptjs');
 
 export interface IUser extends Document {
   username: string,
@@ -90,6 +90,7 @@ export const userSchema: Schema = new Schema({
 userSchema.pre<IUser>('save', function save(next) {
   const user = this;
   try {
+    console.log(bcrypt);
     bcrypt.hash(this.password, 10, (err: Error | undefined, hash: string) => {
       if (err) {
         return next(err)

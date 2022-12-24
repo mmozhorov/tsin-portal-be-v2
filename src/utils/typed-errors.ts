@@ -20,6 +20,10 @@ export const VALIDATION_ERROR = {
   type: "validation_error",
   message: "Validation error",
 };
+export const UNAUTHORIZED_ERROR = {
+  type: "authorization_error",
+  message: "Authorization error",
+};
 export const BAD_REQUEST_ERROR = {
   type: "bad_request",
   message: "Bad request error",
@@ -45,6 +49,7 @@ export const RESOURSE_NOT_FOUND_ERROR = {
 export const ERRORS = {
   INTERNAL_ERROR,
   CRITICAL_ERROR,
+  UNAUTHORIZED_ERROR,
   PERMISSION_ERROR,
   VALIDATION_ERROR,
   NOT_FOUND_ERROR,
@@ -113,6 +118,17 @@ export class ValidationError extends PublicError {
     internalMessage?: string
   ) {
     super(message, 400, type, internalMessage);
+  }
+}
+
+export class UnauthorizedError extends PublicError {
+  constructor(
+    message: string = UNAUTHORIZED_ERROR.message,
+    type: string = UNAUTHORIZED_ERROR.type,
+    public params?: any[],
+    internalMessage?: string
+  ) {
+    super(message, 401, type, internalMessage);
   }
 }
 

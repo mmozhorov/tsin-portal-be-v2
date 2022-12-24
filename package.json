@@ -1,8 +1,8 @@
 {
-  "name": "project-first",
+  "name": "tsin-portal-be-v2",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "mmozhorov",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

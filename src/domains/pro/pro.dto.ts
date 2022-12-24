@@ -44,6 +44,37 @@ class ProUserApplication {
   @ApiProperty()
   public steps: ProUserApplicationStep[]
 }
+class UserAccount {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  public firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  public lastName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  public examType: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  public email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  public password: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  public role: string;
+}
 
 export class CreateProUserApplicationRequest {
   @IsString()
@@ -87,8 +118,9 @@ export class UploadProUserDocumentRequest {
   @IsImageFile()
   @IsNotEmpty()
   @ApiProperty()
-  public file: File;
+  public file: Buffer;
 }
+export class CreateUserAccountRequest extends UserAccount {}
 
 export class CreateProExamResponse {
   public data: ProExam
@@ -104,4 +136,7 @@ export class CreateProUserApplication {
 }
 export class UploadProUserDocumentResponse {
   public data: string;
+}
+export class CreateUserAccountResponse {
+
 }

@@ -1,19 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as jwt from 'jsonwebtoken';
 import { v4 } from 'uuid';
+import { JWT_SECRET } from "../../utils/secrets";
 import { IProExam } from '../../schemas/proExam'
 import { IProUserApplication } from '../../schemas/proUserApplication';
-import { BaseError, InternalError, NotFoundError, ValidationError } from "../../utils/typed-errors";
+import { IUser } from "../../schemas/user";
+import { IGuest } from "../../schemas/guest";
 import { ProExamStatuses } from "./pro.interface";
+import {
+  BaseError,
+  InternalError,
+  NotFoundError,
+  ValidationError,
+  UnauthorizedError,
+  BadRequestError
+} from "../../utils/typed-errors";
+const sesClient = require('../../utils/sendler-handler');
 
 @Injectable()
 export class ProService {
   constructor(
-    @InjectModel('ProExam')
-    private proExamModel: Model<IProExam>,
-    @InjectModel('ProUserApplication')
-    private proUserApplicationModel: Model<IProUserApplication>
+    @InjectModel('ProExam') private proExamModel: Model<IProExam>,
+    @InjectModel('ProUserApplication') private proUserApplicationModel: Model<IProUserApplication>,
+    @InjectModel('User') private userModel: Model<IUser>,
+    @InjectModel('Guest') private guestModel: Model<IGuest>
   ) {}
   private async getProApplicationsForUser (userId: string) { return this.proUserApplicationModel.find({userId})};
   private async getProExamsForUser (userId: string) {
@@ -108,5 +120,36 @@ export class ProService {
       userApplication,
       updatedExam
     )
+  }
+  public async createAccount(body: Partial<IUser>): Promise<string | BaseError> {
+    const {
+      email,
+      password,
+      firstName = '',
+      lastName = '',
+      examType = '',
+      role = 'student',
+    } = body;
+    if (!email) {
+      return new UnauthorizedError("Email is not correct")
+    }
+    const user = await this.userModel.findOne({ email: email.toLowerCase() });
+    if (user) {
+      return new BadRequestError('Email is already exists');
+    }
+    const guest = await this.guestModel.findOne({ email });
+    await this.userModel.create({
+      email: email.toLowerCase(),
+      password,
+      firstName,
+      lastName,
+      examType,
+      role,
+      status: 'notRegistered',
+    })
+    await guest?.remove();
+    const token = jwt.sign({ email }, JWT_SECRET);
+    sesClient.sendCreationAccountEmail( email.toLowerCase(), `${firstName} ${lastName}`, 'exams@tsin.ca' );
+    return token;
   }
 }
