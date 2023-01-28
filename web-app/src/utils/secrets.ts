@@ -1,13 +1,13 @@
 require('dotenv').config()
 
-export const MongoDB = process.env.mongoDB || 'mongodb+srv://touchstone:7bJsvMprNq3y755C@cluster0.dgcqk.mongodb.net/touchstone_db?retryWrites=true&w=majority'
-export const MongoDBLearning = process.env.mongoDBLearning || 'mongodb+srv://touchstone-staging:4eVXBJQUvhx9lKn7@cluster1.umziw.mongodb.net/touchstone_Learning_db?retryWrites=true&w=majority'
+export const MongoDB = process.env.mongoDB;
+export const MongoDBLearning = process.env.mongoDBLearning;
+export const JWT_SECRET = process.env.JWT_SECRET;
+
 if (!MongoDB) {
   console.log('No mongo connection strings. Set MongoDB environment variable.')
   process.exit(1)
 }
-
-export const JWT_SECRET = process.env['JWT_SECRET'] || ''
 
 if (!JWT_SECRET) {
   console.log('No JWT secret string. Set JWT_SECRET environment variable.')
