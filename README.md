@@ -1,5 +1,5 @@
-Instructions for running on AWS: <br/>
-<code>terraform init</code> <br/>
-<code>terraform plan</code> <br/>
-<code>terraform apply</code> <br/>
-<code>terraform destroy</code> <br/>
+# tsin-portal-web-app
+
+Using **Gitlab CI/CD** to automatically build and push a new docker image on **ECR** and deploy it to **ECS**.
+
+![architecture.svg](architecture.svg)
